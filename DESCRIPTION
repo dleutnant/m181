@@ -1,0 +1,25 @@
+Package: m181
+Type: Package
+Title: Timeseries Data Validation according to the DWA-M 181
+Description: This package provides methods to validate time series data
+    according to numerical criteria listed in the German Guideline "DWA-M 181".
+Version: 0.3.8
+Date: 2016-09-20
+Authors@R: c(person("Dominik", "Leutnant", email = "leutnant@fh-muenster.de", role = c("aut", "cre")),
+            person(family = "Hochschulgruppe Simulation", email = "hsgsim@mlist.tugraz.at", role = ("dtc")))
+License: GPL-3
+Imports:
+    magrittr,
+    Rcpp (>= 0.12.2),
+    RcppArmadillo (>= 0.6.400.2.2),
+    xts,
+    zoo
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+Depends:
+    RcppArmadillo
+Suggests:
+    dygraphs,
+    ggplot2
+RoxygenNote: 5.0.1

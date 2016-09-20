@@ -18,4 +18,5 @@ vignettes/*.pdf
 .RData
 
 # test
-testdata/
+R/m181_criteria_ext.R
+/testdata
