@@ -145,7 +145,7 @@ check_gaps <- function(xts,
 #' @param method Either "all" or "minmax".
 #' Determines the way differences within \code{width} are calculated.
 #' If set to "all", the differences of all data points within \code{width} must 
-#' be lower then \code{delta_max} fo fulfill constancy criteria. If set to "minmax", 
+#' be lower than \code{delta_max} fo fulfill constancy criteria. If set to "minmax", 
 #' data points are considered to be constant if the absolute difference of
 #' min(x) and max(x) within \code{width} is lower than \code{delta_max}.
 #' @param lag An integer indicating which lag to use (condition: method is "all")
