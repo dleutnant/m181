@@ -57,18 +57,29 @@ check_gaps <- function(xts,
                       tz = tz,
                       units = match.arg(gap_unit))
   
-  # creating a data frame with computed time gaps details
-  time_gaps <- data.frame(gaps_start, 
-                          gaps_end, 
-                          delta_t, 
-                          type = "time_gap", 
-                          stringsAsFactors = TRUE)
+  # no time gaps 
+  if (length(delta_t) == 0) {
+    
+    time_gaps <- data.frame(NA,NA,NA,NA)
+
+  } else  {
+    
+    # creating a data frame with computed time gaps details
+    time_gaps <- data.frame(gaps_start, 
+                            gaps_end, 
+                            delta_t, 
+                            type = "time_gap", 
+                            stringsAsFactors = TRUE)
+    
+  }
   
   colnames(time_gaps) <- c("gaps_start", "gaps_end", "delta_t", "type")
+
   
   #### VALUE GAPS ####
   
-  idx2 <- which(apply(is.na(xts), 1, any))
+  # remove last position to exclude NA in last observation
+  idx2 <- which(apply(is.na(xts[1:nrow(xts) - 1]), 1, any))
   
   # get rows of xts object which have at least one NA value
   v_gaps_start <- as.POSIXct(zoo::index(xts[idx2]),
@@ -85,29 +96,39 @@ check_gaps <- function(xts,
                         tz = tz,
                         units = match.arg(gap_unit))
   
-  # creating a data frame with computed time gaps details
-  value_gaps <- data.frame(v_gaps_start, 
-                           v_gaps_end, 
-                           v_delta_t, 
-                           type = "value_gap", 
-                           stringsAsFactors = TRUE)
-  
-  colnames(value_gaps) <- c("gaps_start", "gaps_end", "delta_t", "type")
-  
-  # merge both data.frames
-  output <- rbind(time_gaps, value_gaps)
-  
+  # no value gaps 
+  if (length(v_delta_t) == 0) {
+    
+    output <- time_gaps
+    
+  } else {
+    # creating a data frame with computed time gaps details
+    value_gaps <- data.frame(v_gaps_start, 
+                             v_gaps_end, 
+                             v_delta_t, 
+                             type = "value_gap", 
+                             stringsAsFactors = TRUE)
+    
+    # set column names
+    colnames(value_gaps) <- c("gaps_start", "gaps_end", "delta_t", "type")
+    
+    # merge both data.frames
+    output <- rbind(time_gaps, value_gaps)
+        
+  }
+
   # order
   output <- output[ order(output[,1]), ]
   
   if (return_xts) {
+
     # create xts object with index gaps
     time_gap_idx <- seq(from = as.POSIXct(utils::head(zoo::index(xts),1),
                                           tz = tz, origin = "1970-1-1"),
                         to = as.POSIXct(utils::tail(zoo::index(xts),1),
                                         tz = tz, origin = "1970-1-1"),
                         by = paste(interval_length, 
-                                   interval_unit,
+                                   match.arg(interval_unit),
                                    sep = " "))
     
     time_gap_xts <- xts::xts(x = rep(NA, length(time_gap_idx)), 
@@ -118,15 +139,22 @@ check_gaps <- function(xts,
     time_gap_xts <- time_gap_xts[which(!zoo::index(time_gap_xts) %in% zoo::index(xts))]
     
     # create xts object with index gaps
-    value_gap_xts <- xts::xts(x = rep(NA, length(idx2)), 
-                              order.by = zoo::index(xts[idx2]), 
-                              tzone = tz)
-    
+    # no value gaps
+    if (length(idx2) == 0) {
+      
+      value_gap_xts <- NULL
+      
+    } else {
+      
+      value_gap_xts <- xts::xts(x = rep(NA, length(idx2)), 
+                                order.by = zoo::index(xts[idx2]), 
+                                tzone = tz)
+      
+    }
     
     output <- list(gap_table = output,
                    gap_xts = list(time_gaps = time_gap_xts, 
                                   value_gaps = value_gap_xts))
-    
   } 
   
   return(output)

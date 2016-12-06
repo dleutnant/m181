@@ -20,3 +20,5 @@ vignettes/*.pdf
 # test
 R/m181_criteria_ext.R
 /testdata
+^.*\.Rproj$
+^\.Rproj\.user$
