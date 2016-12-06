@@ -9,6 +9,6 @@ Install using devtools:
 ``` r
 if(!require(devtools)) {
   install.packages('devtools')
-  devtools::install_github("dleutnant/m181")
+  devtools::install_github(repo = "dleutnant/m181", ref = "dev")
 }
 ```
