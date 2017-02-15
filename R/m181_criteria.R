@@ -391,7 +391,7 @@ check_outlier <- function(xts,
     crit <- stats::sd(xts, na.rm = TRUE) * sigma_multiplier
     
     # computing the overall mean
-    m <- stats::mean(xts, na.rm = TRUE)
+    m <- base::mean(xts, na.rm = TRUE)
     
     # create a vector of elements referencing to data points higher the criteria
     flag <- which(abs(xts - m) > crit)
